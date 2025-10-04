@@ -1,65 +1,65 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, Float } from '@react-three/drei';
-import { 
-  SiPython, SiPytorch, SiTensorflow, SiAmazonaws, SiDocker, 
-  SiKubernetes, SiReact, SiMongodb, SiPostgresql 
+import React from 'react';
+import type { IconType } from 'react-icons';
+import {
+  SiPython,
+  SiPytorch,
+  SiTensorflow,
+  SiAmazon,
+  SiDocker,
+  SiKubernetes,
+  SiReact,
+  SiMongodb,
+  SiPostgresql,
 } from 'react-icons/si';
+import dynamic from 'next/dynamic';
+
+const GalaxyBackground = dynamic(() => import('./GalaxyBackground'), { ssr: false });
 
 export default function Skills() {
-  const skillCategories = [
+  const techIcons: Array<{ Icon: IconType | undefined; color: string; name: string }> = [
+    { Icon: SiPython as IconType, color: '#3776AB', name: 'Python' },
+    { Icon: (SiPytorch as unknown as IconType) || undefined, color: '#EE4C2C', name: 'PyTorch' },
+    { Icon: (SiTensorflow as unknown as IconType) || undefined, color: '#FF6F00', name: 'TensorFlow' },
+    { Icon: SiAmazon as IconType, color: '#FF9900', name: 'AWS' },
+    { Icon: SiDocker as IconType, color: '#2496ED', name: 'Docker' },
+    { Icon: (SiKubernetes as unknown as IconType) || undefined, color: '#326CE5', name: 'Kubernetes' },
+    { Icon: SiReact as IconType, color: '#61DAFB', name: 'React' },
+    { Icon: (SiMongodb as unknown as IconType) || undefined, color: '#47A248', name: 'MongoDB' },
+  ];
+
+  const skillCategories: Array<{ title: string; skills: string[]; iconComponent?: IconType; iconClassName: string }> = [
     {
       title: 'Machine Learning & AI',
       skills: ['Python', 'PyTorch', 'TensorFlow', 'Scikit-learn', 'XGBoost', 'LightGBM', 'Keras'],
-      icon: <SiPython className="text-5xl text-cyber-blue" />,
+      iconComponent: SiPython as IconType,
+      iconClassName: 'text-5xl text-cyber-blue',
     },
     {
       title: 'Cloud & DevOps',
       skills: ['AWS', 'Docker', 'Kubernetes', 'CI/CD', 'MLflow', 'DVC'],
-      icon: <SiAmazonaws className="text-5xl text-cyber-yellow" />,
+      iconComponent: SiAmazon as IconType,
+      iconClassName: 'text-5xl text-cyber-yellow',
     },
     {
       title: 'Data Engineering',
       skills: ['SQL', 'MongoDB', 'PostgreSQL', 'Apache Spark', 'Airflow', 'ETL'],
-      icon: <SiPostgresql className="text-5xl text-cyber-purple" />,
+      iconComponent: SiPostgresql as IconType,
+      iconClassName: 'text-5xl text-cyber-purple',
     },
     {
       title: 'Web & Visualization',
       skills: ['React', 'Next.js', 'FastAPI', 'Streamlit', 'Plotly', 'D3.js'],
-      icon: <SiReact className="text-5xl text-cyber-green" />,
+      iconComponent: SiReact as IconType,
+      iconClassName: 'text-5xl text-cyber-green',
     },
-  ];
-
-  const techIcons = [
-    { Icon: SiPython, color: '#3776AB', name: 'Python' },
-    { Icon: SiPytorch, color: '#EE4C2C', name: 'PyTorch' },
-    { Icon: SiTensorflow, color: '#FF6F00', name: 'TensorFlow' },
-    { Icon: SiAmazonaws, color: '#FF9900', name: 'AWS' },
-    { Icon: SiDocker, color: '#2496ED', name: 'Docker' },
-    { Icon: SiKubernetes, color: '#326CE5', name: 'Kubernetes' },
-    { Icon: SiReact, color: '#61DAFB', name: 'React' },
-    { Icon: SiMongodb, color: '#47A248', name: 'MongoDB' },
   ];
 
   return (
     <section id="skills" className="min-h-screen py-20 px-4 bg-cyber-black relative overflow-hidden">
-      {/* 3D Background */}
-      <div className="absolute inset-0 opacity-30">
-        <Canvas camera={{ position: [0, 0, 10] }}>
-          <ambientLight intensity={0.5} />
-          <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={0.5} />
-          {techIcons.map((tech, idx) => (
-            <Float key={idx} speed={2} rotationIntensity={1} floatIntensity={2}>
-              <mesh position={[Math.cos(idx * 0.785) * 5, Math.sin(idx * 0.785) * 5, 0]}>
-                <sphereGeometry args={[0.3, 32, 32]} />
-                <meshStandardMaterial color={tech.color} emissive={tech.color} emissiveIntensity={0.5} />
-              </mesh>
-            </Float>
-          ))}
-        </Canvas>
-      </div>
+      <GalaxyBackground />
 
       <div className="max-w-7xl mx-auto relative z-10">
         <motion.div
@@ -83,10 +83,12 @@ export default function Skills() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 viewport={{ once: true }}
-                whileHover={{ scale: 1.2, rotate: 360 }}
+                whileHover={{ scale: 1.15 }}
                 className="flex flex-col items-center gap-2"
               >
-                <tech.Icon style={{ color: tech.color }} className="text-5xl" />
+                {typeof tech.Icon === 'function'
+                  ? React.createElement(tech.Icon, { style: { color: tech.color }, className: 'text-5xl' })
+                  : null}
                 <span className="text-xs text-gray-400">{tech.name}</span>
               </motion.div>
             ))}
@@ -104,7 +106,9 @@ export default function Skills() {
                 className="cyber-border bg-cyber-dark/50 p-6 rounded-lg hover:shadow-lg hover:shadow-cyber-blue/20 transition-all"
               >
                 <div className="flex items-center gap-4 mb-4">
-                  {category.icon}
+                  {typeof category.iconComponent === 'function'
+                    ? React.createElement(category.iconComponent, { className: category.iconClassName })
+                    : null}
                   <h3 className="text-2xl font-bold text-cyber-blue">{category.title}</h3>
                 </div>
                 <div className="flex flex-wrap gap-2">

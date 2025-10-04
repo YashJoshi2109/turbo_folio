@@ -3,6 +3,9 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiMail, FiLinkedin, FiGithub, FiSend } from 'react-icons/fi';
+import dynamic from 'next/dynamic';
+
+const GalaxyBackground = dynamic(() => import('./GalaxyBackground'), { ssr: false });
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -29,7 +32,8 @@ export default function Contact() {
   ];
 
   return (
-    <section id="contact" className="min-h-screen py-20 px-4 bg-cyber-black">
+    <section id="contact" className="min-h-screen py-20 px-4 bg-cyber-black relative overflow-hidden">
+      <GalaxyBackground />
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
