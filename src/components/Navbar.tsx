@@ -1,41 +1,32 @@
-import React from 'react';
-import { Link } from 'react-scroll';
-import './Navbar.css'; // Assuming you have a CSS file for styling
+'use client';
 
-const Navbar: React.FC = () => {
+import React from 'react';
+
+export default function Navbar() {
+  const items = [
+    { href: '#hero', label: 'Home' },
+    { href: '#about', label: 'About' },
+    { href: '#skills', label: 'Skills' },
+    { href: '#projects', label: 'Projects' },
+    { href: '#research', label: 'Research' },
+    { href: '#timeline', label: 'Timeline' },
+    { href: '#contact', label: 'Contact' },
+  ];
+
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        <h1 className="navbar-logo">My Portfolio</h1>
-        <ul className="nav-menu">
-          <li>
-            <Link to="home" smooth={true} duration={500}>Home</Link>
-          </li>
-          <li>
-            <Link to="about" smooth={true} duration={500}>About</Link>
-          </li>
-          <li>
-            <Link to="skills" smooth={true} duration={500}>Skills</Link>
-          </li>
-          <li>
-            <Link to="projects" smooth={true} duration={500}>Projects</Link>
-          </li>
-          <li>
-            <Link to="research" smooth={true} duration={500}>Research</Link>
-          </li>
-          <li>
-            <Link to="timeline" smooth={true} duration={500}>Timeline</Link>
-          </li>
-          <li>
-            <Link to="contact" smooth={true} duration={500}>Contact</Link>
-          </li>
+    <nav className="fixed top-0 left-0 right-0 z-40 backdrop-blur bg-black/30 border-b border-cyber-blue/20">
+      <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a href="#hero" className="text-cyber-blue font-bold text-lg">My Portfolio</a>
+        <ul className="hidden md:flex items-center gap-6">
+          {items.map((item) => (
+            <li key={item.href}>
+              <a href={item.href} className="text-gray-300 hover:text-white transition-colors">
+                {item.label}
+              </a>
+            </li>
+          ))}
         </ul>
-        <div className="mobile-menu-icon">
-          {/* Icon for mobile menu */}
-        </div>
       </div>
     </nav>
   );
-};
-
-export default Navbar;
+}
