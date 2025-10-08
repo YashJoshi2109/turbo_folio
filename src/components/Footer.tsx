@@ -16,10 +16,10 @@ export default function Footer() {
         >
           <p className="text-gray-400 flex items-center justify-center gap-2">
             Made with <FiHeart className="text-cyber-pink animate-pulse" /> by{' '}
-            <span className="text-cyber-blue font-semibold">Yash Joshi</span>
+            <span className="text-cyber-blue font-semibold" onClick={() => window.open('https://www.linkedin.com/in/yash-joshi21/', '_blank')}>Yash Joshi</span>
           </p>
           <p className="text-gray-500 text-sm mt-2">
-            © 2025 All rights reserved.
+            Yash Joshi© 2025 All rights reserved.
           </p>
         </motion.div>
       </div>

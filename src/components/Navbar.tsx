@@ -16,7 +16,7 @@ export default function Navbar() {
   return (
     <nav className="fixed top-0 left-0 right-0 z-40 backdrop-blur bg-black/30 border-b border-cyber-blue/20">
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-        <a href="#hero" className="text-cyber-blue font-bold text-lg">My Portfolio</a>
+        <a href="#hero" className="text-cyber-blue font-bold text-lg">Yash Joshi</a>
         <ul className="hidden md:flex items-center gap-6">
           {items.map((item) => (
             <li key={item.href}>

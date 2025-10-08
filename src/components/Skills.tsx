@@ -18,7 +18,7 @@ import dynamic from 'next/dynamic';
 
 const GalaxyBackground = dynamic(() => import('./GalaxyBackground'), { ssr: false });
 
-export default function Skills() {
+function Skills() {
   const techIcons: Array<{ Icon: IconType | undefined; color: string; name: string }> = [
     { Icon: SiPython as IconType, color: '#3776AB', name: 'Python' },
     { Icon: (SiPytorch as unknown as IconType) || undefined, color: '#EE4C2C', name: 'PyTorch' },
@@ -128,6 +128,6 @@ export default function Skills() {
       </div>
     </section>
   );
-};
+}
 
 export default Skills;

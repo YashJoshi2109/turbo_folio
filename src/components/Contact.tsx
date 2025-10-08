@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { FiMail, FiLinkedin, FiGithub, FiSend } from 'react-icons/fi';
+import { FaKaggle } from 'react-icons/fa';
 import dynamic from 'next/dynamic';
 
 const GalaxyBackground = dynamic(() => import('./GalaxyBackground'), { ssr: false });
@@ -18,17 +19,31 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setStatus('Sending...');
-    setTimeout(() => {
-      setStatus('Message sent successfully!');
-      setFormData({ name: '', email: '', message: '' });
-      setTimeout(() => setStatus(''), 3000);
-    }, 1000);
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      if (res.ok) {
+        setStatus('Message sent successfully!');
+        setFormData({ name: '', email: '', message: '' });
+        setTimeout(() => setStatus(''), 3000);
+      } else {
+        const data = await res.json().catch(() => null);
+        setStatus(data?.error || 'Failed to send message. Please try again later.');
+      }
+    } catch (err) {
+      setStatus('Failed to send message. Please try again later.');
+    }
   };
 
   const socialLinks = [
-    { icon: <FiMail />, label: 'Email', href: 'mailto:yash.joshi@example.com', color: 'text-cyber-blue' },
-    { icon: <FiLinkedin />, label: 'LinkedIn', href: 'https://linkedin.com/in/yashjoshi', color: 'text-cyber-purple' },
+    { icon: <FiMail />, label: 'Email', href: 'mailto:yashjosh7486@gmail.com', color: 'text-cyber-blue' },
+    { icon: <FiLinkedin />, label: 'LinkedIn', href: 'https://linkedin.com/in/yash-joshi21', color: 'text-cyber-purple' },
     { icon: <FiGithub />, label: 'GitHub', href: 'https://github.com/YashJoshi2109', color: 'text-cyber-green' },
+    { icon: <FaKaggle />, label: 'Kaggle', href: 'https://www.kaggle.com/tea340yashjoshi', color: 'text-cyber-blue' },
   ];
 
   return (

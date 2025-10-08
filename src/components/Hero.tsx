@@ -46,7 +46,7 @@ export default function Hero() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.2 }}
           >
-            <span className="bg-gradient-to-r from-cyber-purple via-cyber-blue to-cyber-green bg-clip-text text-transparent cyber-glow">
+            <span className="bg-gradient-to-r from-cyber-purple via-cyber-blue to-cyber-green bg-clip-text text-transparent">
               YASH JOSHI
             </span>
           </motion.h1>
@@ -92,8 +92,8 @@ export default function Hero() {
 
         {/* Scroll Indicator */}
         <motion.div
-          className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
-          animate={{ y: [0, 10, 0] }}
+          className="absolute bottom-100 left-1/2 transform -translate-x-1/2"
+          animate={{ y: [0, 80, 0] }}
           transition={{ duration: 1.5, repeat: Infinity }}
         >
           <a href="#about" className="text-cyber-blue text-3xl">
