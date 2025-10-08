@@ -3,9 +3,9 @@ import { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'My Next.js App',
-  description: 'A Next.js application with TypeScript and dark mode support.',
-  keywords: 'Next.js, TypeScript, dark mode',
+  title: 'Yash Joshi | Data Scientist | ML Engineer',
+  description: 'A curious innovator who turns complex data ecosystems into actionable intelligence that powers real-world decisions.',
+  keywords: 'Data Science, ML Engineer, Kaggle, Researcher, Portfolio, Yash Joshi, Data Scientist, Machine Learning Engineer , Data Analyst, UT Arlington, Texas, USA',
 };
 
 export default function Layout({ children }: { children: ReactNode }) {
