@@ -97,6 +97,7 @@ function CameraLights({ mode }: { mode: HeroMode }) {
 export default function Hero() {
   const [mode, setMode] = useState<HeroMode>('portfolio');
   const [chatOpen, setChatOpen] = useState(false);
+  const [resumeOpen, setResumeOpen] = useState(false);
   const [f1Loading, setF1Loading] = useState(false);
   const [f1Output, setF1Output] = useState<string>('Pick a quick action to load data.');
   const [viewMode, setViewMode] = useState<'data' | 'track'>('data');
@@ -110,6 +111,21 @@ export default function Hero() {
   const [selectedRound, setSelectedRound] = useState(1);
   const [selectedSession, setSelectedSession] = useState('R');
   const apiBase = process.env.NEXT_PUBLIC_F1_API_BASE || 'http://localhost:8000' || 'https://portfolio-amber-phi.vercel.app/';   
+
+  const handleViewResume = () => {
+    setResumeOpen(true);
+  };
+
+  const handleCloseResume = () => {
+    setResumeOpen(false);
+    // Trigger download when modal is closed
+    const link = document.createElement('a');
+    link.href = '/YashJoshiResume.pdf';
+    link.download = 'YashJoshiResume.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   const fetchF1 = async (path: string, label: string) => {
     setF1Loading(true);
@@ -297,12 +313,12 @@ export default function Hero() {
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 1 }}
           >
-            <a
-              href="#projects"
+            <button
+              onClick={handleViewResume}
               className="px-8 py-3 bg-gradient-to-r from-cyber-purple to-cyber-blue rounded-full text-white font-semibold hover:shadow-lg hover:shadow-cyber-blue/50 transition-all cyber-border"
             >
-              View Projects
-            </a>
+              View Resume
+            </button>
             <a
               href="#contact"
               className="px-8 py-3 border-2 border-cyber-blue rounded-full text-cyber-blue font-semibold hover:bg-cyber-blue hover:text-white transition-all"
@@ -561,6 +577,46 @@ export default function Hero() {
           </motion.div>
         )}
       </div>
+
+      {/* Resume Modal */}
+      {resumeOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+          onClick={handleCloseResume}
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.9, opacity: 0 }}
+            className="relative w-full h-full max-w-6xl max-h-[90vh] m-4 bg-cyber-black rounded-lg shadow-2xl overflow-hidden flex flex-col"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header with Close Button */}
+            <div className="flex items-center justify-between p-4 bg-cyber-black/80 border-b border-cyber-blue/20">
+              <h3 className="text-white font-semibold">Resume</h3>
+              <button
+                onClick={handleCloseResume}
+                className="flex items-center justify-center w-10 h-10 rounded-full bg-cyber-blue/20 hover:bg-cyber-blue/40 text-white transition-all backdrop-blur-sm border border-cyber-blue/30"
+                aria-label="Close resume"
+              >
+                <FiX className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* PDF Viewer */}
+            <div className="flex-1 overflow-hidden">
+              <iframe
+                src="/YashJoshiResume.pdf"
+                className="w-full h-full border-0"
+                title="Resume Viewer"
+              />
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
     </section>
   );
 }
