@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: linear-gradient(to bottom, #0a0a0a, #1c1c1e);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3498db;
+  border-radius: 10px;
+}
+
+/* Cyberpunk Glow Effect */
+body {
+  background: linear-gradient(to right, #0a0a0a, #1c1c1e);
+  color: white;
+}
+
+.cyber-glow {
+  text-shadow: 0 0 10px #3498db, 0 0 20px #3498db, 0 0 40px #3498db;
+}
+
+.cyber-border {
+  box-shadow: 0 0 0 2px rgba(52,152,219,0.6), 0 0 20px rgba(52,152,219,0.4);
+}
+
+/* Soft animated glow orbs for safer 3D-like backgrounds */
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.25;
+}

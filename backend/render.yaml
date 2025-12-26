@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: f1-hub-api
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: FASTF1_CACHE_DIR
+        value: /tmp/.fastf1_cache
+      - key: ALLOWED_ORIGINS
+        value: https://port-folio-amber-phi.vercel.app/,http://localhost:3000
