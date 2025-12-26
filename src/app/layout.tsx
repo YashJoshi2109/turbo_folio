@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 import { Metadata } from 'next';
-import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -8,6 +7,12 @@ export const metadata: Metadata = {
   description: 'A curious innovator who turns complex data ecosystems into actionable intelligence that powers real-world decisions.',
   keywords: 'Data Science, ML Engineer, Kaggle, Researcher, Portfolio, Yash Joshi, Data Scientist, Machine Learning Engineer , Data Analyst, UT Arlington, Texas, USA',
   metadataBase: new URL('https://port-folio-amber-phi.vercel.app'),
+  icons: {
+    icon: [
+      { url: '/favicon.png', type: 'image/png' },
+    ],
+    apple: '/favicon.png',
+  },
   openGraph: {
     title: 'Yash Joshi | Data Scientist | ML Engineer',
     description:
@@ -37,10 +42,7 @@ export const metadata: Metadata = {
 export default function Layout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" className="dark scroll-smooth">
-      <body>
-        {children}
-        <Analytics />
-      </body>
+      <body>{children}</body>
     </html>
   );
 }
