@@ -212,3 +212,8 @@ node_modules
 out/
 build/
 dist/
+
+# FastF1 Cache
+backend/.fastf1_cache/
+*.ff1pkl
+*.sqlite
