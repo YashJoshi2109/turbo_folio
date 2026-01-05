@@ -6,20 +6,20 @@ import { FiFileText, FiExternalLink } from 'react-icons/fi';
 export default function Research() {
   const publications = [
     {
-      title: 'Early Sepsis Prediction Using Machine Learning in ICU Patients',
+      title: 'EduKrishnaa: A Career Guidance Web Application Based on Multi-intelligence Using Multiclass Classification Algorithm',
+      authors: 'Yash Joshi, Shreyas Ajgaonkar, Pravin Tale, Pranav Jore, Mrunmayee Jakate, Snehal Lavangare, Deepali Kadam',
+      venue: 'Multi-disciplinary Trends in Artificial Intelligence (MIWAI 2023), Lecture Notes in Computer Science, Springer Nature',
+      abstract: 'Web-based career guidance system that analyzes user profiles with personality and technical tests using multiclass classification algorithms. Random Forest achieved 95.45% accuracy. Provides diverse career options, job opportunities, skill-building courses, projects, internships, and startup suggestions for students.',
+      link: 'https://doi.org/10.1007/978-3-031-36402-0_56',
+      year: '2023',
+    },
+    {
+      title: 'Early Sepsis Prediction Using Machine Learning in ICU Patients Using XGBoost and LSTM',
       authors: 'Yash Joshi, et al.',
       venue: 'IEEE Conference on Healthcare Informatics 2024',
       abstract: 'Novel approach combining XGBoost and LSTM for early sepsis detection with 98.7% accuracy...',
-      link: '#',
+      link: 'https://doi.org/10.1109/HCI49431.2024.10251506',
       year: '2024',
-    },
-    {
-      title: 'NLP-Based Career Recommendation System Using BERT Embeddings',
-      authors: 'Yash Joshi, et al.',
-      venue: 'ACM Conference on Recommender Systems 2023',
-      abstract: 'Deep learning approach for personalized career guidance achieving 89% match accuracy...',
-      link: '#',
-      year: '2023',
     },
   ];
 
