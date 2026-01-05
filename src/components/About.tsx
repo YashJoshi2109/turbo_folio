@@ -5,8 +5,8 @@ import { FiCode, FiAward, FiTrendingUp } from 'react-icons/fi';
 
 export default function About() {
   const stats = [
-    { icon: <FiCode />, label: 'Projects Completed', value: '15+' },
-    { icon: <FiAward />, label: 'Research Papers', value: '3' },
+    { icon: <FiCode />, label: 'Projects Completed', value: '35+' },
+    { icon: <FiAward />, label: 'Research Papers', value: '2' },
     { icon: <FiTrendingUp />, label: 'Years Experience', value: '3+' },
   ];
 
