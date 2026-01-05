@@ -37,3 +37,23 @@ body {
   filter: blur(80px);
   opacity: 0.25;
 }
+
+/* Auto-scrolling animation for skills */
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  display: flex;
+  animation: scroll 30s linear infinite;
+  width: fit-content;
+}
+
+.animate-scroll:hover {
+  animation-play-state: paused;
+}

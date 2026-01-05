@@ -74,24 +74,34 @@ function Skills() {
             </span>
           </h2>
 
-          {/* Tech Icons Grid */}
-          <div className="grid grid-cols-4 md:grid-cols-8 gap-8 mb-16">
-            {techIcons.map((tech, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, scale: 0 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.15 }}
-                className="flex flex-col items-center gap-2"
-              >
-                {typeof tech.Icon === 'function'
-                  ? React.createElement(tech.Icon, { style: { color: tech.color }, className: 'text-5xl' })
-                  : null}
-                <span className="text-xs text-gray-400">{tech.name}</span>
-              </motion.div>
-            ))}
+          {/* Tech Icons Auto-Scrolling */}
+          <div className="overflow-hidden mb-16 py-8 w-full">
+            <div className="flex gap-8 animate-scroll">
+              {/* First set of icons */}
+              {techIcons.map((tech, idx) => (
+                <div
+                  key={`first-${idx}`}
+                  className="flex flex-col items-center gap-2 flex-shrink-0 min-w-[80px] md:min-w-[100px]"
+                >
+                  {typeof tech.Icon === 'function'
+                    ? React.createElement(tech.Icon, { style: { color: tech.color }, className: 'text-4xl md:text-5xl' })
+                    : null}
+                  <span className="text-xs text-gray-400 text-center">{tech.name}</span>
+                </div>
+              ))}
+              {/* Duplicate set for seamless loop */}
+              {techIcons.map((tech, idx) => (
+                <div
+                  key={`second-${idx}`}
+                  className="flex flex-col items-center gap-2 flex-shrink-0 min-w-[80px] md:min-w-[100px]"
+                >
+                  {typeof tech.Icon === 'function'
+                    ? React.createElement(tech.Icon, { style: { color: tech.color }, className: 'text-4xl md:text-5xl' })
+                    : null}
+                  <span className="text-xs text-gray-400 text-center">{tech.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Skill Categories */}
