@@ -6,6 +6,14 @@ import { FiBriefcase, FiAward } from 'react-icons/fi';
 export default function Timeline() {
   const timeline = [
     {
+      year: 'Jan 2026 - Present',
+      title: 'AI & ML Research Assistant',
+      organization: 'The University of Texas at Arlington (with Dr. Eric Jones Jr.)',
+      description:
+        'Supporting applied AI and machine learning research, contributing to model development, experimentation, and data-driven insights across academic and real-world problem domains.',
+      type: 'work',
+    },
+    {
       year: 'Jan 2023 - Dec 2025',
       title: "Master of Science in Data Science",
       organization: 'The University of Texas at Arlington',

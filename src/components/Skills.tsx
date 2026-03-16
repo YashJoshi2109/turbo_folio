@@ -28,30 +28,41 @@ function Skills() {
     { Icon: (SiKubernetes as unknown as IconType) || undefined, color: '#326CE5', name: 'Kubernetes' },
     { Icon: SiReact as IconType, color: '#61DAFB', name: 'React' },
     { Icon: (SiMongodb as unknown as IconType) || undefined, color: '#47A248', name: 'MongoDB' },
+    { Icon: SiPostgresql as IconType, color: '#336791', name: 'PostgreSQL' },
   ];
 
   const skillCategories: Array<{ title: string; skills: string[]; iconComponent?: IconType; iconClassName: string }> = [
     {
       title: 'Machine Learning & AI',
-      skills: ['Python', 'PyTorch', 'TensorFlow', 'Scikit-learn', 'XGBoost', 'LightGBM', 'Keras'],
+      skills: [
+        'Python',
+        'PyTorch',
+        'TensorFlow',
+        'Scikit-learn',
+        'XGBoost',
+        'LightGBM',
+        'Keras',
+        'LangChain',
+        'RAG',
+      ],
       iconComponent: SiPython as IconType,
       iconClassName: 'text-5xl text-cyber-blue',
     },
     {
       title: 'Cloud & DevOps',
-      skills: ['AWS', 'Docker', 'Kubernetes', 'CI/CD', 'MLflow', 'DVC'],
+      skills: ['AWS', 'Docker', 'Kubernetes', 'CI/CD', 'MLflow', 'DVC', 'GitHub Actions', 'Terraform'],
       iconComponent: SiAmazon as IconType,
       iconClassName: 'text-5xl text-cyber-yellow',
     },
     {
       title: 'Data Engineering',
-      skills: ['SQL', 'MongoDB', 'PostgreSQL', 'Apache Spark', 'Airflow', 'ETL'],
+      skills: ['SQL', 'MongoDB', 'PostgreSQL', 'Apache Spark', 'Airflow', 'ETL', 'dbt', 'Kafka'],
       iconComponent: SiPostgresql as IconType,
       iconClassName: 'text-5xl text-cyber-purple',
     },
     {
       title: 'Web & Visualization',
-      skills: ['React', 'Next.js', 'FastAPI', 'Streamlit', 'Plotly', 'D3.js'],
+      skills: ['React', 'Next.js', 'FastAPI', 'Streamlit', 'Plotly', 'D3.js', 'TypeScript', 'Tailwind CSS'],
       iconComponent: SiReact as IconType,
       iconClassName: 'text-5xl text-cyber-green',
     },

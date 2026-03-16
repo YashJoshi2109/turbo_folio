@@ -8,6 +8,57 @@ type ProjectCategory = 'All' | 'ML/AI' | 'Blockchain' | 'Medical AI' | 'DevOps' 
 
 const projects = [
     {
+      title: 'QuantTrade AI – GenAI Equity Research Copilot',
+      description:
+        'Hybrid GenAI fintech platform that fuses predictive models, financial document retrieval, sentiment analysis, and LLM-based reasoning into a unified decision-support system for equity research and portfolio intelligence.',
+      tech: [
+        'Python',
+        'GenAI',
+        'Retrieval-Augmented Generation',
+        'LLMs',
+        'Financial NLP',
+        'Time Series Forecasting',
+        'Cloud',
+      ],
+      metrics: [
+        '10-K & Earnings Call Ingestion',
+        'Financial News & Filings RAG',
+        'Low-Latency Equity Research',
+        'Portfolio Intelligence Copilot',
+      ],
+      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800',
+      github: 'https://github.com/YashJoshi2109/QuantTrade-AI.git',
+      demo: 'https://www.quanttrade.us',
+      color: 'from-emerald-500 to-cyan-500',
+      category: 'ML/AI' as ProjectCategory,
+    },
+    {
+      title: 'NegotiationArena – OpenEnv Salary Negotiation RL',
+      description:
+        'Reinforcement learning environment for salary, equity, and start-date negotiation built on OpenEnv, with a rule-based Challenger for training, a Qwen2.5-1.5B (4-bit) GRPO agent via Unsloth, and a Gradio-powered HF Spaces demo for interactive negotiations.',
+      tech: [
+        'Python',
+        'Reinforcement Learning',
+        'OpenEnv',
+        'Qwen2.5-1.5B',
+        'Unsloth',
+        'TRL (GRPO)',
+        'Gradio',
+        'Plotly',
+      ],
+      metrics: [
+        'Deal Quality + Speed Reward',
+        'Preference Shift (Snorkel Hook)',
+        'Trained vs Baseline Evaluation',
+        'HF Spaces Demo Ready',
+      ],
+      image: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?w=800',
+      github: 'https://github.com/YashJoshi2109/OpenEnv_Hack.git',
+      demo: 'https://huggingface.co/spaces/yashj2110/negotiation-arena-v2',
+      color: 'from-indigo-500 to-cyan-500',
+      category: 'ML/AI' as ProjectCategory,
+    },
+    {
       title: 'NASA Turbofan Engine Degradation – RUL Prediction',
       description: 'Interactive Streamlit application for predicting Remaining Useful Life (RUL) of turbofan engines using NASA C-MAPSS FD001 dataset. Features comprehensive EDA, feature engineering, regression and classification models (XGBoost, Random Forest, SVR, SVC), model comparisons, and real-time predictions with pre-trained models.',
       tech: ['Python', 'Streamlit', 'XGBoost', 'Random Forest', 'Machine Learning', 'Predictive Maintenance', 'Regression', 'Classification'],

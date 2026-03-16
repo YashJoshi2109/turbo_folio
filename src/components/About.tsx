@@ -5,7 +5,7 @@ import { FiCode, FiAward, FiTrendingUp } from 'react-icons/fi';
 
 export default function About() {
   const stats = [
-    { icon: <FiCode />, label: 'Projects Completed', value: '35+' },
+    { icon: <FiCode />, label: 'Projects Completed', value: '45+' },
     { icon: <FiAward />, label: 'Research Papers', value: '2' },
     { icon: <FiTrendingUp />, label: 'Years Experience', value: '3+' },
   ];
@@ -36,7 +36,12 @@ export default function About() {
                 With expertise in <span className="text-cyber-purple font-semibold">AI/ML</span>, Deep Learning, and Cloud Technologies, I specialize in building scalable solutions that transform raw data into actionable insights.
               </p>
               <p className="text-lg text-gray-300 leading-relaxed">
-                My work spans healthcare analytics, NLP, computer vision, and MLOps, with a passion for deploying production-ready machine learning systems that make a real-world impact.
+                In my journey, I also work as an <span className="text-cyber-blue font-semibold">AI and ML Research Assistant</span> at{' '}
+                <span className="text-cyber-green font-semibold">The University of Texas at Arlington</span> under{' '}
+                <span className="text-cyber-purple font-semibold">Dr. Eric Jones Jr.</span>, collaborating on applied Machine learning and AI research.
+              </p>
+              <p className="text-lg text-gray-300 leading-relaxed">
+                My work spans Gen AI, healthcare, finanical analytics, NLP, computer vision, and MLOps, with a passion for deploying production-ready machine learning systems that make a real-world impact.
               </p>
             </div>
 

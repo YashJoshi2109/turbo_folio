@@ -20,7 +20,7 @@ export default function Home() {
     <>
       <LoadingScreen />
       <Navbar />
-      <main className="relative overflow-hidden">
+      <main className="relative overflow-x-hidden">
         {/* Hero handles its own Suspense for the heavy 3D scene so that text can appear immediately */}
         <Hero />
         <About />
