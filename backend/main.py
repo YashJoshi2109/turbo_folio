@@ -6,6 +6,7 @@ import fastf1
 from fastf1 import plotting as f1_plotting  # noqa: F401  # future use
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+import requests
 
 # Ensure local imports work when run as a module or script
 sys.path.append(os.path.dirname(__file__))
@@ -35,6 +36,29 @@ fastf1.Cache.enable_cache(F1_CACHE_DIR)
 
 app = FastAPI(title="F1 Hub API", version="0.1.0")
 
+OPENF1_BASE_URL = os.environ.get("OPENF1_BASE_URL", "https://api.openf1.org/v1")
+OPENF1_TIMEOUT_SECONDS = float(os.environ.get("OPENF1_TIMEOUT_SECONDS", "12"))
+
+
+def _openf1_get(path: str, params: Optional[dict[str, Any]] = None) -> list[dict[str, Any]]:
+    url = f"{OPENF1_BASE_URL.rstrip('/')}/{path.lstrip('/')}"
+    try:
+        resp = requests.get(url, params=params or {}, timeout=OPENF1_TIMEOUT_SECONDS)
+        resp.raise_for_status()
+        payload = resp.json()
+        if not isinstance(payload, list):
+            raise ValueError("OpenF1 returned non-list payload")
+        return payload
+    except Exception as exc:  # noqa: BLE001
+        raise HTTPException(status_code=503, detail=f"OpenF1 fetch failed for {path}: {str(exc)[:180]}") from exc
+
+
+def _compact_latest(items: list[dict[str, Any]], max_items: int) -> list[dict[str, Any]]:
+    if not items:
+        return []
+    # OpenF1 data is typically in ascending time order; keep the tail
+    return items[-max_items:]
+
 
 @app.on_event("startup")
 def prewarm_cache():
@@ -52,16 +76,16 @@ def root():
     return {"status": "ok", "message": "F1 Hub API is running", "docs": "/docs"}
 
 
-# Comma-separated list of allowed frontend origins.
-# Example value in Render env: "https://your-vercel-url.vercel.app,http://localhost:3000"
-allowed_origins = os.environ.get(
-    "ALLOWED_ORIGINS",
-    "http://localhost:3000",
-).split(",")
+# CORS
+# This API doesn't use cookies, so we can safely allow all origins without credentials.
+# That prevents "Failed to fetch" issues when calling from different deployed frontends.
+allowed_origins_raw = os.environ.get("ALLOWED_ORIGINS", "*").strip()
+allowed_origins = ["*"] if allowed_origins_raw == "*" else [o.strip() for o in allowed_origins_raw.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[o.strip() for o in allowed_origins],
-    allow_credentials=True,
+    allow_origins=allowed_origins,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -84,6 +108,37 @@ def _get_current_season() -> int:
     if datetime.now().month < 3:
         return current_year - 1
     return current_year
+
+
+@app.get("/live/dashboard")
+def live_dashboard():
+    """
+    Lightweight, fast "terminal" snapshot using OpenF1.
+    Uses `session_key=latest` (best-effort). If OpenF1 real-time is unavailable, this endpoint may return 503.
+    """
+    cache_key = "openf1:live:dashboard"
+    cached = get_cache(cache_key, max_age_seconds=2)
+    if cached:
+        return cached
+
+    session = _openf1_get("sessions", params={"session_key": "latest"})
+    drivers = _openf1_get("drivers", params={"session_key": "latest"})
+    weather = _openf1_get("weather", params={"session_key": "latest"})
+    positions = _openf1_get("position", params={"session_key": "latest"})
+    intervals = _openf1_get("intervals", params={"session_key": "latest"})
+    race_control = _openf1_get("race_control", params={"session_key": "latest"})
+
+    payload = {
+        "session": session[-1] if session else None,
+        "drivers": drivers,
+        "weather_latest": weather[-1] if weather else None,
+        "positions_latest": _compact_latest(positions, max_items=40),
+        "intervals_latest": _compact_latest(intervals, max_items=40),
+        "race_control_latest": _compact_latest(race_control, max_items=30),
+        "source": "openf1",
+    }
+    set_cache(cache_key, payload)
+    return payload
 
 
 @app.get("/standings/drivers")

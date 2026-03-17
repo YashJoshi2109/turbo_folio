@@ -68,7 +68,7 @@ function SimpleCar() {
 
 function FerrariModel() {
   const { scene } = useGLTF('/models/ferrari.glb');
-  return <primitive object={scene} scale={0.5} position={[0, -0.25, 0]} />;
+  return <primitive object={scene} scale={0.45} position={[0, -0.25, 0]} />;
 }
 
 useGLTF.preload('/models/ferrari.glb');
@@ -95,6 +95,8 @@ function CameraLights({ mode }: { mode: HeroMode }) {
 }
 
 export default function Hero() {
+  const fullTitle = 'Data Scientist | ML Engineer | Researcher | AI Engineer';
+  const [typedTitle, setTypedTitle] = useState('');
   const [mode, setMode] = useState<HeroMode>('portfolio');
   const [chatOpen, setChatOpen] = useState(false);
   const [resumeOpen, setResumeOpen] = useState(false);
@@ -103,14 +105,30 @@ export default function Hero() {
   const [viewMode, setViewMode] = useState<'data' | 'track'>('data');
   const [trackData, setTrackData] = useState<any>(null);
   const [positions, setPositions] = useState<any[]>([]);
+  const [liveEnabled, setLiveEnabled] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(1);
   const [currentTime, setCurrentTime] = useState(0);
   const playbackIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const liveIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const [selectedYear, setSelectedYear] = useState(2024);
   const [selectedRound, setSelectedRound] = useState(1);
   const [selectedSession, setSelectedSession] = useState('R');
-  const apiBase = process.env.NEXT_PUBLIC_F1_API_BASE || 'http://localhost:8000' || 'https://portfolio-amber-phi.vercel.app/';   
+  const apiBase = process.env.NEXT_PUBLIC_F1_API_BASE ?? 'http://localhost:8000';
+
+  useEffect(() => {
+    let index = 0;
+    const interval = setInterval(() => {
+      index += 1;
+      if (index > fullTitle.length) {
+        clearInterval(interval);
+        return;
+      }
+      setTypedTitle(fullTitle.slice(0, index));
+    }, 60);
+
+    return () => clearInterval(interval);
+  }, [fullTitle]);
 
   const handleViewResume = () => {
     setResumeOpen(true);
@@ -178,6 +196,45 @@ export default function Hero() {
     }
   };
 
+  const fetchLiveDashboard = async () => {
+    setF1Loading(true);
+    try {
+      const res = await fetch(`${apiBase}/live/dashboard`);
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(text || `Request failed: ${res.status}`);
+      }
+      const json = await res.json();
+      const sessionName =
+        json?.session?.session_name || json?.session?.name || json?.session?.session_type || 'Live';
+      const meetingName = json?.session?.meeting_name || json?.session?.event_name || '';
+      const weather = json?.weather_latest
+        ? `Weather: Air ${json.weather_latest.air_temperature ?? '-'}°C • Track ${json.weather_latest.track_temperature ?? '-'}°C • Wind ${json.weather_latest.wind_speed ?? '-'}`
+        : 'Weather: -';
+      const rc = Array.isArray(json?.race_control_latest) ? json.race_control_latest : [];
+      const rcLines = rc
+        .slice(-8)
+        .reverse()
+        .map((m: any) => `• ${m.date?.slice?.(11, 19) ?? ''} ${m.category ?? ''} ${m.message ?? ''}`.trim())
+        .join('\n');
+
+      setF1Output(
+        `${meetingName ? `${meetingName} — ` : ''}${sessionName}\n` +
+          `${weather}\n\n` +
+          `Race Control (latest)\n${rcLines || '• -'}\n\n` +
+          `Tip: toggle Live refresh to keep updating.`,
+      );
+    } catch (err: any) {
+      setF1Output(
+        `Live dashboard unavailable.\n\n` +
+          `This endpoint uses OpenF1 (fast, lightweight). If OpenF1 real-time is not accessible right now, it may return 503.\n\n` +
+          `Error: ${err.message || err.toString()}`,
+      );
+    } finally {
+      setF1Loading(false);
+    }
+  };
+
   const loadTrackVisualization = async (year?: number, round?: number, session?: string) => {
     const y = year || selectedYear;
     const r = round || selectedRound;
@@ -223,6 +280,35 @@ export default function Hero() {
       }
     };
   }, [isPlaying, playbackSpeed]);
+
+  useEffect(() => {
+    if (!chatOpen) {
+      setLiveEnabled(false);
+      if (liveIntervalRef.current) {
+        clearInterval(liveIntervalRef.current);
+        liveIntervalRef.current = null;
+      }
+      return;
+    }
+
+    if (liveEnabled && liveIntervalRef.current === null) {
+      // Immediate fetch + refresh loop
+      fetchLiveDashboard();
+      liveIntervalRef.current = setInterval(() => {
+        fetchLiveDashboard();
+      }, 2000);
+    } else if (!liveEnabled && liveIntervalRef.current) {
+      clearInterval(liveIntervalRef.current);
+      liveIntervalRef.current = null;
+    }
+
+    return () => {
+      if (liveIntervalRef.current) {
+        clearInterval(liveIntervalRef.current);
+        liveIntervalRef.current = null;
+      }
+    };
+  }, [chatOpen, liveEnabled, apiBase]);
 
   const headings = {
     portfolio: {
@@ -290,12 +376,13 @@ export default function Hero() {
           </motion.h1>
 
           <motion.h2
-            className="text-2xl md:text-4xl text-gray-200 mb-6"
+            className="text-2xl md:text-4xl text-gray-200 mb-6 font-medium"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
-            Data Scientist | ML Engineer | Researcher
+            <span>{typedTitle}</span>
+            <span className="inline-block w-1.5 ml-1 animate-pulse bg-cyber-green align-middle" />
           </motion.h2>
 
           <motion.p
@@ -418,6 +505,13 @@ export default function Hero() {
                     Metadata
                   </button>
                   <button
+                    onClick={() => fetchLiveDashboard()}
+                    className="rounded-lg bg-white/10 text-white text-xs font-semibold py-2 hover:bg-white/15 transition disabled:opacity-60 col-span-2"
+                    disabled={f1Loading}
+                  >
+                    ⚡ Live Dashboard
+                  </button>
+                  <button
                     onClick={() => {
                       setViewMode('track');
                       loadTrackVisualization();
@@ -460,6 +554,15 @@ export default function Hero() {
                   <div className="text-xs uppercase tracking-[0.2em] text-gray-400 flex items-center gap-2">
                     <span>Data</span>
                     {f1Loading && <span className="text-[10px] text-cyber-blue">Loading...</span>}
+                    <label className="ml-auto flex items-center gap-2 text-[10px] tracking-[0.15em] text-gray-300 select-none">
+                      <input
+                        type="checkbox"
+                        checked={liveEnabled}
+                        onChange={(e) => setLiveEnabled(e.target.checked)}
+                        className="accent-cyber-green"
+                      />
+                      LIVE_REFRESH
+                    </label>
                   </div>
                   <pre className="text-xs text-gray-100 whitespace-pre-wrap break-words">
 {f1Output}
