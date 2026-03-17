@@ -1,6 +1,7 @@
 import os
 import sys
 from typing import Optional, Any
+from datetime import datetime
 import pandas as pd
 import fastf1
 from fastf1 import plotting as f1_plotting  # noqa: F401  # future use
@@ -113,29 +114,60 @@ def _get_current_season() -> int:
 @app.get("/live/dashboard")
 def live_dashboard():
     """
-    Lightweight, fast "terminal" snapshot using OpenF1.
-    Uses `session_key=latest` (best-effort). If OpenF1 real-time is unavailable, this endpoint may return 503.
+    Lightweight \"terminal\" snapshot for the latest completed race.
+
+    This version only uses FastF1 (no external live API), so it is reliable
+    on Render: first call may be slower while the cache warms, but afterwards
+    responses are fast and stable.
     """
-    cache_key = "openf1:live:dashboard"
-    cached = get_cache(cache_key, max_age_seconds=2)
+    year = _get_current_season()
+    cache_key = f"live_dashboard:{year}"
+    cached = get_cache(cache_key, max_age_seconds=60)
     if cached:
         return cached
 
-    session = _openf1_get("sessions", params={"session_key": "latest"})
-    drivers = _openf1_get("drivers", params={"session_key": "latest"})
-    weather = _openf1_get("weather", params={"session_key": "latest"})
-    positions = _openf1_get("position", params={"session_key": "latest"})
-    intervals = _openf1_get("intervals", params={"session_key": "latest"})
-    race_control = _openf1_get("race_control", params={"session_key": "latest"})
+    try:
+        events = fastf1.get_event_schedule(year, include_testing=False)
+    except Exception as exc:  # pragma: no cover - simple pass-through
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+    today = datetime.utcnow().date()
+    completed = events[events["EventDate"] <= today]
+    if len(completed) == 0:
+        latest_event = events.iloc[0]
+    else:
+        latest_event = completed.iloc[-1]
+
+    round_number = int(latest_event["RoundNumber"])
+    session = _get_session(year, round_number, "R")
+
+    results = session.results
+    top_results = []
+    if results is not None:
+        cols = ["Position", "DriverNumber", "Abbreviation", "TeamName", "Time", "Status"]
+        keep_cols = [c for c in cols if c in results.columns]
+        top_results = results[keep_cols].head(10).to_dict(orient="records")
+
+    weather = session.weather_data
+    latest_weather = None
+    if weather is not None and len(weather) > 0:
+        latest_weather = weather.iloc[-1][
+            [c for c in ["AirTemp", "TrackTemp", "Humidity", "Pressure", "WindSpeed", "WindDirection", "Rainfall"] if c in weather.columns]  # type: ignore[list-item]
+        ].to_dict()
 
     payload = {
-        "session": session[-1] if session else None,
-        "drivers": drivers,
-        "weather_latest": weather[-1] if weather else None,
-        "positions_latest": _compact_latest(positions, max_items=40),
-        "intervals_latest": _compact_latest(intervals, max_items=40),
-        "race_control_latest": _compact_latest(race_control, max_items=30),
-        "source": "openf1",
+        "session": {
+            "year": year,
+            "round": round_number,
+            "event": session.event.EventName,
+            "location": session.event.Location,
+            "country": session.event.Country,
+            "session_name": session.name,
+            "date": session.date.strftime("%Y-%m-%d"),
+        },
+        "top_classification": top_results,
+        "weather_latest": latest_weather,
+        "source": "fastf1",
     }
     set_cache(cache_key, payload)
     return payload
