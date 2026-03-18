@@ -7,13 +7,39 @@ from typing import Any, Optional
 # SQLite-based cache to reduce repeated expensive FastF1 calls on Render/free tier.
 # Stores arbitrary JSON-serializable payloads keyed by a string, with an updated_at timestamp.
 
-DB_PATH = os.environ.get("CACHE_DB_PATH", "f1cache.db")
+CACHE_DB_PATH_ENV = os.environ.get("CACHE_DB_PATH")
+# Render's filesystem is read-only except /tmp. If a user sets CACHE_DB_PATH to an
+# unwritable location (like /data), we automatically fall back to /tmp.
+DB_PATH = CACHE_DB_PATH_ENV or ("/tmp/f1cache.db" if os.environ.get("RENDER") else "f1cache.db")
 CACHE_TTL_SECONDS = int(os.environ.get("CACHE_TTL_SECONDS", "86400"))  # default 24h
 
 
+def _resolve_writable_db_path(path: str) -> str:
+    directory = os.path.dirname(path) or "."
+    # If directory is clearly unwritable (Render), prefer /tmp.
+    if directory.startswith("/data"):
+        return "/tmp/f1cache.db"
+    return path
+
+
 def _ensure_db():
-    os.makedirs(os.path.dirname(DB_PATH) or ".", exist_ok=True)
-    with sqlite3.connect(DB_PATH) as conn:
+    global DB_PATH
+    DB_PATH = _resolve_writable_db_path(DB_PATH)
+    directory = os.path.dirname(DB_PATH) or "."
+    try:
+        os.makedirs(directory, exist_ok=True)
+    except PermissionError:
+        DB_PATH = "/tmp/f1cache.db"
+        directory = os.path.dirname(DB_PATH) or "."
+        os.makedirs(directory, exist_ok=True)
+
+    try:
+        conn = sqlite3.connect(DB_PATH)
+    except PermissionError:
+        DB_PATH = "/tmp/f1cache.db"
+        conn = sqlite3.connect(DB_PATH)
+
+    with conn:
         conn.execute(
             """
             CREATE TABLE IF NOT EXISTS cache (
@@ -23,7 +49,6 @@ def _ensure_db():
             )
             """
         )
-        conn.commit()
 
 
 def get_cache(key: str, max_age_seconds: Optional[int] = None) -> Optional[Any]:
