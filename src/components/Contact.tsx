@@ -135,9 +135,9 @@ export default function Contact() {
               className="space-y-8"
             >
               <div>
-                <h3 className="text-2xl font-bold text-cyber-blue mb-4">Let's Connect!</h3>
+                <h3 className="text-2xl font-bold text-cyber-blue mb-4">Let&apos;s Connect!</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  I'm always interested in hearing about new opportunities, collaborations, or just a friendly chat about data science and machine learning.
+                  I&apos;m always interested in hearing about new opportunities, collaborations, or just a friendly chat about data science and machine learning.
                 </p>
               </div>
 
@@ -160,7 +160,7 @@ export default function Contact() {
               <div className="cyber-border bg-cyber-dark/50 p-6 rounded-lg">
                 <h4 className="text-lg font-bold text-cyber-purple mb-3">Current Status</h4>
                 <p className="text-gray-300 text-sm">
-                  🎓 Master's Student at UTA<br />
+                  🎓 Master&apos;s Student at UTA<br />
                   💼 Open to Full-Time Opportunities<br />
                   🚀 Available for Freelance Projects
                 </p>

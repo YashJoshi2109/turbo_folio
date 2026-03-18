@@ -5,7 +5,7 @@ import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Stars, Float, useGLTF } from '@react-three/drei';
 import { motion } from 'framer-motion';
 import { FiArrowDown, FiMessageCircle, FiX, FiPlay, FiPause, FiSkipBack, FiSkipForward } from 'react-icons/fi';
-import { useMemo, useState, useEffect, useRef } from 'react';
+import { useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { Panel, PanelGroup, PanelResizeHandle } from 'react-resizable-panels';
 import dynamic from 'next/dynamic';
 
@@ -196,7 +196,7 @@ export default function Hero() {
     }
   };
 
-  const fetchLiveDashboard = async () => {
+  const fetchLiveDashboard = useCallback(async () => {
     setF1Loading(true);
     try {
       const res = await fetch(`${apiBase}/live/dashboard`);
@@ -233,7 +233,7 @@ export default function Hero() {
     } finally {
       setF1Loading(false);
     }
-  };
+  }, [apiBase]);
 
   const loadTrackVisualization = async (year?: number, round?: number, session?: string) => {
     const y = year || selectedYear;
@@ -308,7 +308,7 @@ export default function Hero() {
         liveIntervalRef.current = null;
       }
     };
-  }, [chatOpen, liveEnabled, apiBase]);
+  }, [chatOpen, liveEnabled, fetchLiveDashboard]);
 
   const headings = {
     portfolio: {
@@ -634,7 +634,7 @@ export default function Hero() {
 
                   {!trackData && (
                     <div className="h-64 flex items-center justify-center text-gray-400 text-sm">
-                      Select race/session and click "Load Track" to visualize
+                      Select race/session and click &quot;Load Track&quot; to visualize
                     </div>
                   )}
 

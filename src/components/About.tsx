@@ -29,8 +29,8 @@ export default function About() {
             {/* Text Content */}
             <div className="space-y-6">
               <p className="text-lg text-gray-300 leading-relaxed">
-                I'm a <span className="text-cyber-blue font-semibold">Data Scientist</span> and{' '}
-                <span className="text-cyber-green font-semibold">Machine Learning Engineer</span> pursuing my Master's in Data Science at the University of Texas at Arlington.
+                I&apos;m a <span className="text-cyber-blue font-semibold">Data Scientist</span> and{' '}
+                <span className="text-cyber-green font-semibold">Machine Learning Engineer</span> pursuing my Master&apos;s in Data Science at the University of Texas at Arlington.
               </p>
               <p className="text-lg text-gray-300 leading-relaxed">
                 With expertise in <span className="text-cyber-purple font-semibold">AI/ML</span>, Deep Learning, and Cloud Technologies, I specialize in building scalable solutions that transform raw data into actionable insights.
