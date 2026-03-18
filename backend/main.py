@@ -79,7 +79,7 @@ def root():
 
 # CORS
 # This API doesn't use cookies, so we can safely allow all origins without credentials.
-# That prevents "Failed to fetch" issues when calling from different deployed frontends.
+# That prevents "Failed to fetch" issues when  from different deployed frontends.
 allowed_origins_raw = os.environ.get("ALLOWED_ORIGINS", "*").strip()
 allowed_origins = ["*"] if allowed_origins_raw == "*" else [o.strip() for o in allowed_origins_raw.split(",") if o.strip()]
 
